@@ -77,34 +77,29 @@ const checkResumes = () => {
 // validate user at the top and redirect to login if user not found in local storage
 validateUser();
 
-// Data.json was uploaded to npoint as browser was not allowing to read a local file automatically
-fetch('https://api.npoint.io/61a8966d1dd6666ba656')
+// Data.json was uploaded to json server as browser was not allowing to read a local file automatically
+fetch('http://localhost:3000/resume')
 .then(response => response.json())
 .then(respData => {
 	loader.style.display= 'none';
 	resumeData = respData;
-	allResumes = resumeData['resume'];
+	allResumes = resumeData;
 	checkResumes();
 	checkButtonsToDisplay();
 	fillData();
 })
 .catch(error => {
-	alert('Page interrupted or Unable to load file from npint. Loading the data from local.');
+	alert('Please run json server with correct path to load resumes!');
 	loader.style.display= 'none';
-	resumeData = data;
-	allResumes = resumeData['resume'];
-	checkResumes();
-	checkButtonsToDisplay();
-	fillData();
 })
 
 // will filter our resumes and saves it to allResumes and checks which buttons to display
 searchBar.oninput = function(event) {
     const searchInput = event.target.value;
     if(searchInput.length > 0) {
-        allResumes = resumeData['resume'].filter(resume => resume['basics']['AppliedFor'].toLowerCase().includes(searchInput.toLowerCase()));
+        allResumes = resumeData.filter(resume => resume['basics']['AppliedFor'].toLowerCase().includes(searchInput.toLowerCase()));
     } else {
-        allResumes = resumeData['resume'];
+        allResumes = resumeData;
     }
     currentResumeIndex = 0;
     if(allResumes.length > 0) fillData();
